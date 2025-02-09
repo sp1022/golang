@@ -1,0 +1,57 @@
+{
+    "job": {
+        "setting": {
+            "speed": {
+                "byte": 1048576
+            },
+            "errorLimit": {
+                "record": 0,
+                "percentage": 0.02
+            }
+        },
+        "content": [
+            {
+                "reader": {
+                    "name": "postgresqlreader",
+                    "parameter": {
+                        "username": "{{source_username}}",
+                        "password": "{{source_password}}",
+                        "splitPk": "",
+                        "connection": [
+                            {
+                                "querySql": [
+                                    "select {{source_columns}} from {{source_table}}{{source_partname}} "
+                                ],
+                                "jdbcUrl": [
+                                    "jdbc:postgresql://{{source_host}}:{{source_port}}/{{source_db}}"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "writer": {
+                    "name": "oraclewriter",
+                    "parameter": {
+                        "username": "{{target_username}}",
+                        "password": "{{target_password}}",
+                        "column": [
+                            "{{target_columns}}"
+                        ],
+                        "preSql": [
+                            "truncate table {{target_table}}{{target_partname}}"
+                        ],
+                        "connection": [
+                            {
+                                "jdbcUrl": "jdbc:postgresql://{{target_host}}:{{target_port}}/{{target_db}}",
+                                "table": [
+                                    "{{target_table}}"
+                                ]
+                            }
+                        ]
+                    }
+                }
+
+            }
+        ]
+    }
+}

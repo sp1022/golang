@@ -1,0 +1,57 @@
+{
+    "job": {
+        "setting": {
+            "speed": {
+                "byte": 1048576
+            },
+            "errorLimit": {
+                "record": 0,
+                "percentage": 0.02
+            }
+        },
+        "content": [
+            {
+                "reader": {
+                    "name": "postgresqlreader",
+                    "parameter": {
+                        "username": "pg16_test",
+                        "password": "test",
+                        "splitPk": "",
+                        "connection": [
+                            {
+                                "querySql": [
+                                    "select id,c2 from test1 "
+                                ],
+                                "jdbcUrl": [
+                                    "jdbc:postgresql://192.168.160.102:5432/postgres"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "writer": {
+                    "name": "oraclewriter",
+                    "parameter": {
+                        "username": "C##shipeng",
+                        "password": "shipeng",
+                        "column": [
+                            "id","c2"
+                        ],
+                        "preSql": [
+                            "truncate table test1"
+                        ],
+                        "connection": [
+                            {
+                                "jdbcUrl": "jdbc:oracle:thin:@oracle19c-rac-scan1:1521:ORCL",
+                                "table": [
+                                    "test1"
+                                ]
+                            }
+                        ]
+                    }
+                }
+
+            }
+        ]
+    }
+}
