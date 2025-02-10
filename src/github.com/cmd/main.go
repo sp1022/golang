@@ -4,8 +4,6 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"golang/src/github.com/db"
-	"golang/src/github.com/genjson"
 	"log"
 	"os"
 	"path/filepath"
@@ -13,6 +11,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+	"transdbx/src/github.com/db"
+	"transdbx/src/github.com/genjson"
 
 	dataxr "github.com/koolay/datax-runner"
 )
