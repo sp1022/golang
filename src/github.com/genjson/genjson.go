@@ -2,7 +2,7 @@ package genjson
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"strings"
 )
 
@@ -60,7 +60,7 @@ func ReplacePlaceholders(template string, placeholders map[string]string) string
 // 读取模板文件并替换占位符
 func GenerateDataXConfig(templateFilePath string, placeholders map[string]string) (string, error) {
 	// 读取模板文件内容
-	template, err := ioutil.ReadFile(templateFilePath)
+	template, err := os.ReadFile(templateFilePath)
 	if err != nil {
 		return "", fmt.Errorf("failed to read template file: %v", err)
 	}
@@ -74,5 +74,5 @@ func GenerateDataXConfig(templateFilePath string, placeholders map[string]string
 
 // 保存更新后的配置文件
 func SaveConfigToFile(configJSON, filePath string) error {
-	return ioutil.WriteFile(filePath, []byte(configJSON), 0644)
+	return os.WriteFile(filePath, []byte(configJSON), 0644)
 }
