@@ -28,6 +28,8 @@ type Config struct {
 		SourceDBs map[string]DBConfig `yaml:"source"`
 		TargetDB  DBConfig            `yaml:"target"`
 	} `yaml:"databases"`
+	Xms string `yaml:"xms"`
+	Xmx string `yaml:"xmx"`
 }
 
 // ReadConfig 从 YAML 文件中读取配置

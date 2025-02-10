@@ -139,8 +139,8 @@ func main() {
 			//3启动
 			datax := dataxr.NewDataX(dataxr.Config{
 				Debug:      true,
-				Xms:        "512m",
-				Xmx:        "512m",
+				Xms:        dbJson.Xms,
+				Xmx:        dbJson.Xmx,
 				Loglevel:   "debug",
 				DataxHome:  dataxHome,
 				Mode:       "",
