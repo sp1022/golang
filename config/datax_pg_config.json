@@ -38,11 +38,11 @@
                             "{{target_columns}}"
                         ],
                         "preSql": [
-                            "truncate table {{target_table}}{{target_partname}}"
+                            "{{targetPsql}}"
                         ],
                         "connection": [
                             {
-                                "jdbcUrl": "jdbc:postgresql://{{target_host}}:{{target_port}}/{{target_db}}",
+                                "jdbcUrl": "jdbc:oracle:thin:@oracle19c-rac-scan1:1521:ORCL jdbc:postgresql://{{target_host}}:{{target_port}}/{{target_db}}",
                                 "table": [
                                     "{{target_table}}"
                                 ]

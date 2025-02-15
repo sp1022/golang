@@ -33,14 +33,14 @@ func (lg *StderrLog) Write(text string) {
 
 func main() {
 	//1设置路径
-	var cfgFilePath, dataxHome, sourceTable, TargetTable, sourceSchema, sourcePart, targetPart string
+	var cfgFilePath, dataxHome, sourceTable, TargetTable, sourceSchema, targetPart, targetPsql string
 	//flag.StringVar(&cfgFilePath, "config", "./datax_pg_job.json", "job config file")
 	flag.StringVar(&sourceTable, "T", "", "source table name")
 	flag.StringVar(&TargetTable, "t", "", "target table name")
-	flag.StringVar(&sourcePart, "P", "", "part name of source table")
-	flag.StringVar(&targetPart, "p", "", "part name of target table")
+	flag.StringVar(&targetPart, "p", "", "part name of target table,only oracle!!!!")
 	flag.StringVar(&sourceSchema, "schema", "", "table in  which schema")
 	flag.StringVar(&dataxHome, "dataxhome", "", "job config file")
+	flag.StringVar(&targetPsql, "presql", "", "job config file")
 	flag.Parse()
 	if sourceTable == "" {
 		log.Fatalf("please set source table name using: -T")
@@ -106,7 +106,6 @@ func main() {
 				"source_host":     soureDBConf.Host,
 				"source_port":     strconv.Itoa(soureDBConf.Port),
 				"source_dbtype":   soureDBConf.Dbtype,
-				"source_partname": sourcePart,
 				"target_username": dbJson.Databases.TargetDB.User,
 				"target_password": dbJson.Databases.TargetDB.Password,
 				"target_table":    TargetTable,
@@ -116,12 +115,21 @@ func main() {
 				"target_port":     strconv.Itoa(dbJson.Databases.TargetDB.Port),
 				"target_dbtype":   dbJson.Databases.TargetDB.Dbtype,
 				"target_partname": targetPart,
+				"target_Psql":     targetPsql,
 			}
+			//设置oracle分区如何查询
 			if dbJson.Databases.TargetDB.Dbtype == "oracle" && targetPart != "" {
 				placeholders["target_partname"] = " partition (" + targetPart + ")" // 设置为 oracle 特定值
 			}
-			if soureDBConf.Dbtype == "oracle" && sourcePart != "" {
-				placeholders["source_partname"] = " partition (" + sourcePart + ")" // 设置为 oracle 特定值
+
+			//设置如何设置预执行sql
+			if targetPsql == "" {
+				if dbJson.Databases.TargetDB.Dbtype == "oracle" && targetPart != "" {
+					targetPsql = "alter table " + TargetTable + " truncate partition " + targetPart
+					placeholders["target_Psql"] = targetPsql
+				} else {
+					targetPsql = "delete from " + TargetTable
+				}
 			}
 			// 读取模板文件并替换占位符
 			updatedConfig, err := genjson.GenerateDataXConfig(templateFilePath, placeholders)
@@ -130,7 +138,7 @@ func main() {
 			}
 
 			//2.2保存配置到文件
-			cfgFilePath = filepath.Join(dir, "/config/datax_pg_oracle.json") //
+			cfgFilePath = filepath.Join(dir, "/config/datax_pg_config_"+sourceTable+".json")
 			err = genjson.SaveConfigToFile(updatedConfig, cfgFilePath)
 			if err != nil {
 				log.Fatalf("Error saving config to file: %v", err)

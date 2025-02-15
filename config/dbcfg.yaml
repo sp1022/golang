@@ -8,11 +8,11 @@ databases:
     dbname: postgres
     dbtype: postgresql
  target:
-  host: 172.16.98.7
-  port: 65432
-  user: pg16_test
-  password: test
-  dbname: postgres
-  dbtype: postgresql
+  host: oracle19c-rac-scan1
+  port: 1521
+  user: C##shipeng
+  password: shipeng
+  dbname: ORCL
+  dbtype: oracle
 xms: 512m
 xmx: 512m  
